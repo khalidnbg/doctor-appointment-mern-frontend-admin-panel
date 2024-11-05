@@ -8,10 +8,10 @@ import Login from "./pages/Login";
 import { AdminContext } from "./context/AdminContext";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./pages/adimin/Dashboard";
-import AddDoctor from "./pages/adimin/AddDoctor";
-import AllAppointments from "./pages/adimin/AllAppointments";
-import DoctorsList from "./pages/adimin/DoctorsList";
+import Dashboard from "./pages/admin/Dashboard";
+import AddDoctor from "./pages/admin/AddDoctor";
+import AllAppointments from "./pages/admin/AllAppointments";
+import DoctorsList from "./pages/admin/DoctorsList";
 
 function App() {
   const { aToken } = useContext(AdminContext);
