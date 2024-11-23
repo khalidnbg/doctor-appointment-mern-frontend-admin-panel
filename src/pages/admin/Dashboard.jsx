@@ -82,6 +82,7 @@ const Dashboard = () => {
                     src={assets.cancel_icon}
                     alt="Cancel"
                     className="w-10 cursor-pointer"
+                    onClick={() => cancelAppointment(item._id)}
                   />
                 )}
               </div>
