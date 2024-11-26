@@ -73,7 +73,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.home_icon} alt="" />
-            <p>Dashboard</p>
+            <p className="hidden md:block">Dashboard</p>
           </NavLink>
 
           <NavLink
@@ -85,7 +85,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.appointment_icon} alt="" />
-            <p>Appointments</p>
+            <p className="hidden md:block">Appointments</p>
           </NavLink>
 
           <NavLink
@@ -97,7 +97,7 @@ const Sidebar = () => {
             }
           >
             <img src={assets.people_icon} alt="" />
-            <p>Profile</p>
+            <p className="hidden md:block">Profile</p>
           </NavLink>
         </ul>
       )}
