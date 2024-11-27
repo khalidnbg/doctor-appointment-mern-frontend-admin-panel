@@ -1,11 +1,43 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DoctorContext } from "../../context/DoctorContext";
 import { AppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DoctorProfile = () => {
   const { dToken, profileData, setProfileData, getProfileData } =
     useContext(DoctorContext);
-  const { currency, backendUrl } = useContext(AppContext);
+  const { currency, backendUrl } = useContext(DoctorContext);
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const updateProfile = async () => {
+    try {
+      const updateData = {
+        address: profileData.address,
+        fees: profileData.fees,
+        available: profileData.available,
+      };
+
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/update-profile",
+        updateData,
+        {
+          headers: { Authorization: `Bearer ${dToken}` },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setIsEdit(false);
+        getProfileData();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     if (dToken) {
@@ -48,23 +80,90 @@ const DoctorProfile = () => {
             <p className="text-gray-600 font-medium mt-4">
               Appointment fees:{" "}
               <span className="text-gray-800">
-                {currency} {profileData.fees}
+                {currency}{" "}
+                {isEdit ? (
+                  <input
+                    type="number"
+                    value={profileData.fees}
+                    onChange={(e) => {
+                      setProfileData((prev) => ({
+                        ...prev,
+                        fees: e.target.value,
+                      }));
+                    }}
+                  />
+                ) : (
+                  profileData.fees
+                )}
               </span>
             </p>
             <div className="flex gap-2 py-2">
               <p>Address</p>
               <p className="text-sm">
-                {profileData.address.line1} <br />
-                {profileData.address.line2}
+                {isEdit ? (
+                  <input
+                    type="text"
+                    value={profileData.address.line1}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        address: { ...prev.address, line1: e.target.value },
+                      }))
+                    }
+                  />
+                ) : (
+                  profileData.address.line1
+                )}{" "}
+                <br />
+                {isEdit ? (
+                  <input
+                    type="text"
+                    value={profileData.address.line2}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        address: { ...prev.address, line1: e.target.value },
+                      }))
+                    }
+                  />
+                ) : (
+                  profileData.address.line2
+                )}
               </p>
-            </div>{" "}
+            </div>
+
             <div className="flex gap-1 pt-2">
-              <input type="checkbox" name="" id="" />
+              <input
+                onChange={() =>
+                  isEdit &&
+                  setProfileData((prev) => ({
+                    ...prev,
+                    available: !prev.available,
+                  }))
+                }
+                checked={profileData.available}
+                type="checkbox"
+                name=""
+                id=""
+              />
               <label htmlFor="">Available</label>
             </div>
-            <button className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all">
-              Edit
-            </button>
+
+            {isEdit ? (
+              <button
+                onClick={updateProfile}
+                className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all"
+              >
+                save
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsEdit(true)}
+                className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all"
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
       </div>
